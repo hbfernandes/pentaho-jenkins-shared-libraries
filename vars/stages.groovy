@@ -31,7 +31,7 @@ import static org.hitachivantara.ci.config.LibraryProperties.TAG_NAME
 
 @Field BuildData buildData = BuildData.instance
 
-void configure(Map defaultParams = [:]) {
+void configure(Map defaultParams = [:], boolean updateJob = true) {
   new ConfigStage({
     if (utils.hasScmConfig()) {
       // checkout the pipeline repo
@@ -39,7 +39,11 @@ void configure(Map defaultParams = [:]) {
     }
 
     config.load(defaultParams)
-    config.applyToJob(defaultParams)
+
+    if(updateJob) {
+      log.info "Job configuration will be updated"
+      config.applyToJob(defaultParams)
+    }
 
     if (buildData.useMinions) {
       log.info "Using Minion jobs to perform the build"
